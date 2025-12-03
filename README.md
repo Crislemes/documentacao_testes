@@ -4,7 +4,7 @@ Uma aplicação web que utiliza IA para gerar cenários de teste automatizados b
 
 ## 🚀 Funcionalidades
 
-- **Interface intuitiva** com design roxo moderno
+- **Interface intuitiva** com design moderno
 - **Campos de entrada** para:
   - 📖 Narrativa de Usuário
   - 📋 Regras de Negócio  
