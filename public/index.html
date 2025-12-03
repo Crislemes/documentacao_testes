@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Cenários de Teste</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 600px;
+        }
+
+        .form-section {
+            padding: 40px;
+            background: #f8fafc;
+        }
+
+        .result-section {
+            padding: 40px;
+            background: white;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4c1d95;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #8B5CF6;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #8B5CF6, #A855F7);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            border: 2px solid #e2e8f0;
+        }
+
+        .loading {
+            text-align: center;
+            color: #8B5CF6;
+            font-style: italic;
+        }
+
+        .error {
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-section {
+                border-left: none;
+                border-top: 1px solid #e2e8f0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Gerador de Cenários de Teste</h1>
+            <p>Transforme seus requisitos em cenários de teste automatizados</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <form id="testForm">
+                    <div class="form-group">
+                        <label for="narrativa">📖 Narrativa de Usuário</label>
+                        <textarea id="narrativa" rows="4" placeholder="Como [usuário], eu quero [funcionalidade] para que [benefício]..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="regras">📋 Regras de Negócio</label>
+                        <textarea id="regras" rows="4" placeholder="Liste as regras de negócio que devem ser seguidas..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="criterios">✅ Critérios de Aceite</label>
+                        <textarea id="criterios" rows="4" placeholder="Defina os critérios que devem ser atendidos..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="refinamento">⚙️ Refinamento Técnico</label>
+                        <textarea id="refinamento" rows="4" placeholder="Detalhes técnicos, APIs, integrações..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn" id="generateBtn">
+                        🚀 Gerar Cenários de Teste
+                    </button>
+                </form>
+            </div>
+            
+            <div class="result-section">
+                <h3 style="color: #4c1d95; margin-bottom: 20px;">📊 Resultado Gerado</h3>
+                <div id="error" class="error" style="display: none;"></div>
+                <div id="result" class="result">Preencha os campos ao lado e clique em "Gerar Cenários de Teste" para ver os resultados aqui.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('generateBtn');
+            const result = document.getElementById('result');
+            const error = document.getElementById('error');
+            
+            error.style.display = 'none';
+            
+            const data = {
+                narrativa: document.getElementById('narrativa').value,
+                regras: document.getElementById('regras').value,
+                criteriosAceite: document.getElementById('criterios').value,
+                refinamentoTecnico: document.getElementById('refinamento').value
+            };
+            
+            if (!data.narrativa && !data.regras && !data.criteriosAceite && !data.refinamentoTecnico) {
+                error.textContent = 'Por favor, preencha pelo menos um campo.';
+                error.style.display = 'block';
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = '⏳ Gerando...';
+            result.textContent = 'Processando seus requisitos com IA...\nPor favor, aguarde...';
+            result.className = 'result loading';
+            
+            try {
+                const response = await fetch('/processar-requisitos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erro ${response.status}: ${response.statusText}`);
+                }
+                
+                const responseData = await response.json();
+                result.textContent = responseData.resultado;
+                result.className = 'result';
+                
+            } catch (err) {
+                error.textContent = `Erro ao processar: ${err.message}`;
+                error.style.display = 'block';
+                result.textContent = 'Erro ao gerar cenários. Verifique sua conexão e tente novamente.';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🚀 Gerar Cenários de Teste';
+            }
+        });
+    </script>
+</body>
+</html>
