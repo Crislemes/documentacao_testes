@@ -28,7 +28,7 @@ app.post("/processar-requisitos", async (req, res) => {
     const prompt = `
       IMPORTANTE: Responda SEMPRE em português brasileiro.
       
-      Gere um Refinamento Completo com base nos dados abaixo:
+      Com base nas informações fornecidas, gere uma documentação completa:
 
       ### Narrativa
       ${narrativa}
@@ -42,13 +42,22 @@ app.post("/processar-requisitos", async (req, res) => {
       ### Refinamento Técnico
       ${refinamentoTecnico}
 
-      Retorne em português brasileiro:
-      - Narrativa reescrita
-      - Critérios de aceite no padrão Gherkin
-      - Regras de negócio refinadas
-      - Requisitos funcionais e não funcionais
-      - Estrutura de cenários de testes
-      - Passos para automação
+      Retorne uma documentação estruturada em português brasileiro contendo:
+      
+      ## 1. DESCRIÇÃO DO DESENVOLVIMENTO
+      - Resumo do que foi desenvolvido
+      - Funcionalidades implementadas
+      - Objetivos alcançados
+      
+      ## 2. CENÁRIOS DE TESTE (GHERKIN)
+      - Cenários no padrão Gherkin em português
+      - Formato: Funcionalidade, Cenário, Dado, Quando, Então
+      - Cobertura de casos positivos e negativos
+      
+      ## 3. CASOS DE TESTE DETALHADOS
+      - Casos de teste com passos específicos
+      - Pré-condições, passos de execução e resultados esperados
+      - Dados de teste necessários
     `;
 
     const response = await client.chat.completions.create({
