@@ -26,6 +26,8 @@ app.post("/processar-requisitos", async (req, res) => {
     const { narrativa, regras, criteriosAceite, refinamentoTecnico } = req.body;
 
     const prompt = `
+      IMPORTANTE: Responda SEMPRE em português brasileiro.
+      
       Gere um Refinamento Completo com base nos dados abaixo:
 
       ### Narrativa
@@ -40,7 +42,7 @@ app.post("/processar-requisitos", async (req, res) => {
       ### Refinamento Técnico
       ${refinamentoTecnico}
 
-      Retorne:
+      Retorne em português brasileiro:
       - Narrativa reescrita
       - Critérios de aceite no padrão Gherkin
       - Regras de negócio refinadas
