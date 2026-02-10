@@ -40,7 +40,7 @@ http://localhost:3000
 
 ## 📋 Como Usar
 
-1. Preencha pelo menos um dos campos de requisitos
+1. Preencha pelo menos um dos campos de requisitos (texto)
 2. Clique em "Gerar Cenários de Teste"
 3. Aguarde o processamento da IA
 4. Visualize os cenários gerados no painel direito
