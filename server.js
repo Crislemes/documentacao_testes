@@ -23,7 +23,7 @@ const client = new OpenAI({
 
 app.post("/processar-requisitos", async (req, res) => {
   try {
-    const { narrativa, regras, criteriosAceite, refinamentoTecnico } = req.body;
+    const { narrativa, promissas, regras, criteriosAceite, refinamentoTecnico } = req.body;
     
     let promptText = `IMPORTANTE: Responda SEMPRE em português brasileiro.
 
@@ -31,6 +31,9 @@ Com base nas informações fornecidas, gere uma documentação completa:
 
 ### Narrativa
 ${narrativa || 'Não informado'}
+
+### Premisssas
+${premissas || 'Não informado'}
 
 ### Regras de Negócio
 ${regras || 'Não informado'}

@@ -166,6 +166,11 @@
                     </div>
                     
                     <div class="form-group">
+                        <label for="promissas">💭 Premissas</label>
+                        <textarea id="promissas" rows="4" placeholder="Liste as premissas e suposições do projeto..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="regras">📋 Regras de Negócio</label>
                         <textarea id="regras" rows="4" placeholder="Liste as regras de negócio que devem ser seguidas..."></textarea>
                     </div>
@@ -207,12 +212,13 @@
             
             const dados = {
                 narrativa: document.getElementById('narrativa').value,
+                promissas: document.getElementById('promissas').value,
                 regras: document.getElementById('regras').value,
                 criteriosAceite: document.getElementById('criterios').value,
                 refinamentoTecnico: document.getElementById('refinamento').value
             };
             
-            const hasText = dados.narrativa || dados.regras || dados.criteriosAceite || dados.refinamentoTecnico;
+            const hasText = dados.narrativa || dados.promissas || dados.regras || dados.criteriosAceite || dados.refinamentoTecnico;
             
             if (!hasText) {
                 error.textContent = 'Por favor, preencha pelo menos um campo.';
