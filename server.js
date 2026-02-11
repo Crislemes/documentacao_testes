@@ -23,7 +23,11 @@ const client = new OpenAI({
 
 app.post("/processar-requisitos", async (req, res) => {
   try {
-    const { narrativa, promissas, regras, criteriosAceite, refinamentoTecnico } = req.body;
+    const { narrativa = '', premissas = '', regras = '', criteriosAceite = '', refinamentoTecnico = '' } = req.body || {};
+    
+    if (!narrativa && !premissas && !regras && !criteriosAceite && !refinamentoTecnico) {
+      return res.status(400).json({ error: 'Nenhum campo foi preenchido' });
+    }
     
     let promptText = `IMPORTANTE: Responda SEMPRE em português brasileiro.
 
@@ -32,7 +36,7 @@ Com base nas informações fornecidas, gere uma documentação completa:
 ### Narrativa
 ${narrativa || 'Não informado'}
 
-### Premisssas
+### Premissas
 ${premissas || 'Não informado'}
 
 ### Regras de Negócio
@@ -79,8 +83,8 @@ Retorne uma documentação estruturada em português brasileiro contendo:
 
     res.json({ resultado: response.choices[0].message.content });
   } catch (error) {
-    console.error('Erro:', error.message);
-    res.status(500).json({ error: error.message });
+    console.error('Erro ao processar requisitos:', error);
+    res.status(500).json({ error: error.message || 'Erro ao processar requisitos' });
   }
 });
 
