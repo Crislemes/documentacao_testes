@@ -31,7 +31,7 @@ app.post("/processar-requisitos", async (req, res) => {
     
     let promptText = `IMPORTANTE: Responda SEMPRE em português brasileiro.
 
-Com base nas informações fornecidas, gere uma documentação completa:
+Com base nas informações fornecidas, gere uma documentação completa :
 
 ### Narrativa
 ${narrativa || 'Não informado'}
@@ -61,7 +61,7 @@ Retorne uma documentação estruturada em português brasileiro contendo:
 - Cobertura de casos positivos e negativos
 
 ## 3. CASOS DE TESTE DETALHADOS
-- Casos de teste com passos específicos
+- Casos de teste com passos específicos e claros de como cada passo será executado
 - Pré-condições, passos de execução e resultados esperados
 - Dados de teste necessários`;
     
