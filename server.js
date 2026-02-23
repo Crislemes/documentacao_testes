@@ -65,19 +65,7 @@ Retorne obrigatoriamente na seguinte estrutura:
 - Objetivo da funcionalidade
 - Impacto esperado no sistema
 
-# 2. REGRAS DE NEGÓCIO REFINADAS
-- Lista organizada
-- Escritas de forma clara e objetiva
-
-# 3. REQUISITOS
-
-## 3.1 Requisitos Funcionais
-- Lista numerada
-
-## 3.2 Requisitos Não Funcionais
-- Lista numerada
-
-# 4. CENÁRIOS DE TESTE (PADRÃO GHERKIN)
+# 2. CENÁRIOS DE TESTE (PADRÃO GHERKIN)
 
 Funcionalidade: [Nome da funcionalidade]
 
@@ -90,12 +78,11 @@ Então ...
 - Criar cenários de validação de regras
 - Criar cenários de erro quando aplicável
 
-# 5. CASOS DE TESTE DETALHADOS
+# 3. CASOS DE TESTE DETALHADOS
 
 Para cada cenário Gherkin, criar:
 
-- ID do Caso de Teste
-- Nome do Caso
+- Nome do Caso de Teste
 - Objetivo
 - Pré-condições
 - Dados de teste
@@ -110,12 +97,6 @@ Quando houver persistência de dados:
 - Se houver INSERT, validar com SELECT
 - Se houver UPDATE, validar alteração de dados
 - Se houver DELETE, validar ausência do registro
-
-# 6. ESTRATÉGIA DE AUTOMAÇÃO
-
-- Indicar quais cenários são candidatos à automação
-- Indicar se a automação deve ser via UI, API ou Banco
-- Informar pontos críticos para validação automatizada
 `;
 
     const response = await client.chat.completions.create({
