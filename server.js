@@ -24,56 +24,109 @@ const client = new OpenAI({
 app.post("/processar-requisitos", async (req, res) => {
   try {
     const { narrativa = '', premissas = '', regras = '', criteriosAceite = '', refinamentoTecnico = '' } = req.body || {};
-    
+
     if (!narrativa && !premissas && !regras && !criteriosAceite && !refinamentoTecnico) {
       return res.status(400).json({ error: 'Nenhum campo foi preenchido' });
     }
-    
-    let promptText = `IMPORTANTE: Responda SEMPRE em português brasileiro.
 
-Com base nas informações fornecidas, gere uma documentação completa :
+    let promptText = `
+IMPORTANTE:
+- Responda SEMPRE em português brasileiro.
+- Utilize TODAS as informações fornecidas.
+- Caso existam queries SQL no Refinamento Técnico, elas DEVEM ser utilizadas para validação nos casos de teste.
+- Não seja excessivamente técnico. Priorize clareza, organização e objetividade.
+- Não inventar queries SQL se não existirem no refinamento técnico.
 
-### Narrativa
+Com base nas informações abaixo, gere uma documentação completa e estruturada.
+
+---
+
+### 📌 Narrativa
 ${narrativa || 'Não informado'}
 
-### Premissas
+### 📌 Premissas
 ${premissas || 'Não informado'}
 
-### Regras de Negócio
+### 📌 Regras de Negócio
 ${regras || 'Não informado'}
 
-### Critérios de Aceite
+### 📌 Critérios de Aceite
 ${criteriosAceite || 'Não informado'}
 
-### Refinamento Técnico
+### 📌 Refinamento Técnico
 ${refinamentoTecnico || 'Não informado'}
 
-Retorne uma documentação estruturada em português brasileiro contendo:
+---
 
-## 1. DESCRIÇÃO DO DESENVOLVIMENTO
-- Resumo do que foi desenvolvido
-- Funcionalidades implementadas
-- Objetivos alcançados
+Retorne obrigatoriamente na seguinte estrutura:
 
-## 2. CENÁRIOS DE TESTE
-- Cenários no padrão Gherkin em português
-- Formato: Funcionalidade, Cenário, Dado, Quando, Então
-- Cobertura de casos positivos e negativos
+# 1. DESCRIÇÃO DO DESENVOLVIMENTO
+- Resumo claro do que foi implementado
+- Objetivo da funcionalidade
+- Impacto esperado no sistema
 
-## 3. CASOS DE TESTE DETALHADOS
-- Casos de teste com passos específicos e claros de como cada passo será executado
-- Pré-condições, passos de execução e resultados esperados
-- Dados de teste necessários`;
-    
+# 2. REGRAS DE NEGÓCIO REFINADAS
+- Lista organizada
+- Escritas de forma clara e objetiva
+
+# 3. REQUISITOS
+
+## 3.1 Requisitos Funcionais
+- Lista numerada
+
+## 3.2 Requisitos Não Funcionais
+- Lista numerada
+
+# 4. CENÁRIOS DE TESTE (PADRÃO GHERKIN)
+
+Funcionalidade: [Nome da funcionalidade]
+
+Cenário: [Nome do cenário]
+Dado que ...
+Quando ...
+Então ...
+
+- Criar cenários positivos e negativos
+- Criar cenários de validação de regras
+- Criar cenários de erro quando aplicável
+
+# 5. CASOS DE TESTE DETALHADOS
+
+Para cada cenário Gherkin, criar:
+
+- ID do Caso de Teste
+- Nome do Caso
+- Objetivo
+- Pré-condições
+- Dados de teste
+- Passos detalhados numerados
+- Resultado esperado
+- Evidência esperada
+
+Quando houver persistência de dados:
+- Incluir seção "Validação no Banco de Dados"
+- Informar a query SQL a ser executada
+- Informar o que deve ser validado no retorno da query
+- Se houver INSERT, validar com SELECT
+- Se houver UPDATE, validar alteração de dados
+- Se houver DELETE, validar ausência do registro
+
+# 6. ESTRATÉGIA DE AUTOMAÇÃO
+
+- Indicar quais cenários são candidatos à automação
+- Indicar se a automação deve ser via UI, API ou Banco
+- Informar pontos críticos para validação automatizada
+`;
+
     const response = await client.chat.completions.create({
-      model: "gpt-4o", 
+      model: "gpt-4o",
       messages: [
         {
-          role: "system", 
+          role: "system",
           content: "Você é um especialista em qualidade de software e geração de cenários de teste. Sempre responda em português brasileiro."
         },
         {
-          role: "user", 
+          role: "user",
           content: promptText
         }
       ],
