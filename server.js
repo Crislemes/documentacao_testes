@@ -46,25 +46,129 @@ IMPORTANTE:
 - Responda SEMPRE em português brasileiro.
 - Utilize TODAS as informações fornecidas.
 - Não inventar regras ou queries SQL que não estejam descritas.
-- A documentação deve ser clara e compreensível para QA e PO.
+- A documentação deve ser clara e compreensível para QA, PO e desenvolvedores.
 - Utilize linguagem simples, objetiva e orientada a comportamento.
-- Evite termos técnicos de banco de dados quando não forem essenciais.
+- Evite excesso de linguagem técnica quando não for necessário.
 - Evite repetição desnecessária entre seções.
-- Separe claramente comportamento funcional de validação técnica.
-- Não seja excessivamente técnico nos cenários.
-- Priorize testes executáveis de sistema (fluxo de ponta a ponta com o sistema em execução).
-- Foque em passos observáveis na interface/API e resultados verificáveis pelo usuário.
-- Reduza estrutura excessivamente documental e mantenha foco prático.
-- Gere casos prontos para execução manual ou automatizada.
+
+OBJETIVO PRINCIPAL:
+Gerar cenários e casos de teste claros, completos e executáveis com foco em:
+- comportamento funcional
+- validação de regras de negócio
+- validação técnica quando aplicável
+
+IMPORTANTE SOBRE HISTÓRIAS TÉCNICAS:
+Se a história envolver:
+- procedures
+- refatoração de código
+- otimização de SQL
+- alteração de processamento interno
+- mudanças estruturais em backend
+
+ENTÃO os testes devem incluir dois tipos de validação:
+
+1) TESTES FUNCIONAIS  
+Validam que o comportamento do sistema permanece correto.
+
+2) TESTES ESTRUTURAIS / TÉCNICOS  
+Validam alterações técnicas como:
+
+- remoção de loops
+- remoção de cursores
+- uso de INSERT SELECT
+- criação de novas procedures
+- alteração de lógica SQL
+- chamadas entre procedures
+
+Esses testes devem validar o código quando necessário.
+
+---
+
+REGRAS IMPORTANTES PARA GERAÇÃO DOS CENÁRIOS:
+
+- Criar cenários que cubram TODOS os critérios de aceite.
+- Cada critério de aceite deve estar representado em pelo menos um cenário.
+- Priorizar cenários objetivos e claros.
+- Evitar cenários genéricos ou repetitivos.
+
+Quando a história envolver múltiplas procedures ou componentes:
+
+- Criar cenários específicos para cada procedure ou funcionalidade.
+- Deixar claro qual componente está sendo validado.
+
+---
+
+IMPORTANTE SOBRE GHERKIN:
+
+- Cenários devem ser de alto nível.
+- Não incluir SQL ou validação de banco nos cenários.
+- Utilizar linguagem comportamental.
+- Representar ações do sistema ou usuário.
+
+Exemplo de estilo esperado:
+
+Cenário: Otimização da procedure de aplicação de dispensas  
+Dado que a procedure foi refatorada  
+Quando o código da procedure for analisado  
+Então não devem existir cursores ou loops  
+E a inserção deve utilizar INSERT SELECT
+
+---
+
+IMPORTANTE SOBRE CASOS DE TESTE:
+
+Os casos de teste devem complementar os cenários e incluir:
+
+- Nome do Caso de Teste
+- Procedure ou funcionalidade validada (quando aplicável)
+- Objetivo
+- Pré-condições
+- Dados de Teste
+- Passos detalhados numerados
+- Resultado Esperado
+- Evidência Esperada
+
+Os passos podem incluir:
+
+- execução de procedures
+- consulta de código
+- validação de processamento
+- validação de dados gerados
+
+---
+
+IMPORTANTE SOBRE HISTÓRIAS COM PROCEDURES:
+
+Quando houver procedures no refinamento técnico:
+
+Criar casos de teste para validar:
+
+- existência da procedure
+- execução da procedure
+- regras de processamento
+- dados gerados
+- chamadas entre procedures
+- remoção de cursores/loops quando descrito
+
+---
 
 Caso existam queries SQL no Refinamento Técnico:
-- Identificar o tipo da query:
-  • Query de preparação ou extração de dados para teste
-  • Query de validação de persistência (INSERT, UPDATE, DELETE)
-- NÃO mencionar SQL nos passos Gherkin.
-- NÃO criar novas queries.
 
-Com base nas informações abaixo, gere uma documentação completa, estruturada e orientada a testes funcionais e técnicos.
+Identificar o tipo da query:
+
+• Query de preparação de dados  
+• Query de validação de persistência  
+
+Regras:
+
+- NÃO criar novas queries.
+- NÃO alterar queries existentes.
+- NÃO mencionar SQL dentro dos cenários Gherkin.
+- SQL pode aparecer apenas nos CASOS DE TESTE ou VALIDAÇÃO TÉCNICA.
+
+---
+
+Com base nas informações abaixo, gere uma documentação de testes completa.
 
 ---
 
@@ -85,105 +189,89 @@ ${refinamentoTecnico || "Não informado"}
 
 ---
 
-Retorne preferencialmente na estrutura abaixo.
-Adapte a forma de apresentação quando isso deixar os testes mais executáveis e objetivos.
+Retorne na seguinte estrutura:
 
 # 1. DESCRIÇÃO DO DESENVOLVIMENTO
 
-- Resumo claro do que foi implementado
-- Objetivo da funcionalidade
-- Problema que resolve
-- Impacto esperado no sistema
-- Público impactado (quando possível)
+Criar um resumo claro contendo:
 
-A descrição deve ser breve, clara e compreensível para áreas não técnicas.
+- objetivo da alteração
+- problema resolvido
+- impacto esperado
+- principais componentes alterados (procedures, processos, etc)
+
+Essa seção deve ser breve e clara.
 
 ---
 
-# 2. CENÁRIOS DE TESTE (PADRÃO GHERKIN)
+# 2. CENÁRIOS DE TESTE
 
 Funcionalidade: [Nome claro da funcionalidade]
 
 Regras obrigatórias:
+
 - Criar cenários positivos
-- Criar cenários negativos
-- Criar cenários de validação de regras
-- Criar cenários de erro quando aplicável
-- Representar ações reais do usuário
-- Priorizar jornadas completas de sistema (início, processamento e resultado final)
-- Incluir contexto mínimo de ambiente quando necessário (autenticação, permissão e dados iniciais)
-- Utilizar linguagem simples e comportamental
-- NÃO mencionar tabelas, colunas ou SQL
-- NÃO incluir validação técnica nesta seção
+- Criar cenários negativos quando aplicável
+- Criar cenários de validação de regra
+- Criar cenários de validação técnica quando a história for técnica
+- Cobrir todos os critérios de aceite
+- Cenários devem ser claros e objetivos
+- Não mencionar SQL
+- Não mencionar tabelas
+- Não mencionar colunas
 
-Modelo sugerido:
+Modelo:
 
-Cenário: [Nome claro]
-Dado que ...
-Quando ...
-Então ...
+Cenário: [Nome do cenário]
+
+Dado que ...  
+Quando ...  
+Então ...  
+E ...
 
 ---
 
 # 3. CASOS DE TESTE DETALHADOS
 
-Para cada cenário Gherkin, criar:
+Para cada cenário criado:
+
+Gerar um caso de teste contendo:
 
 - Nome do Caso de Teste
+- Procedure ou funcionalidade validada (quando aplicável)
 - Objetivo
-- Pré-condições mínimas
-- Dados de Teste essenciais
-- Passos detalhados numerados (ações reais do usuário)
+- Pré-condições
+- Dados de Teste
+- Passos numerados
 - Resultado Esperado
 - Evidência Esperada
 
-Se fizer sentido para execução prática, você pode agrupar ou simplificar campos sem perder clareza.
-
-Quando houver queries de extração ou preparação de dados para teste:
-
-## Query para Preparação/Consulta de Dados
-
-- Informar a query SQL fornecida no refinamento técnico
-- Explicar como ela deve ser utilizada (antes ou durante o teste)
-- Informar qual dado deve ser extraído ou validado
-- Explicar como o resultado impacta a execução do teste
-
-Essas queries podem ser incluídas na seção de Pré-condições ou Dados de Teste.
-
-Regras:
-- Não repetir literalmente o Gherkin
-- Complementar com detalhes práticos
-- Manter foco no comportamento do usuário
-- Evitar excesso de seções e texto estrutural desnecessário
-- Priorizar instruções claras para execução rápida
-- Não misturar com validação de persistência
+Os passos devem ser claros e executáveis.
 
 ---
 
 # 4. VALIDAÇÃO TÉCNICA (QUANDO APLICÁVEL)
 
-Criar apenas quando houver persistência de dados (INSERT, UPDATE ou DELETE).
+Criar esta seção quando houver:
+
+- alteração de persistência
+- alteração de queries
+- alteração de procedures
+- inserções ou processamento de dados
+
+Incluir:
 
 ## Validação no Banco de Dados
 
-- Informar a query SQL fornecida no refinamento técnico
-- Explicar o que deve ser validado no retorno
-- Descrever claramente o resultado esperado
+- Query fornecida no refinamento técnico
+- O que deve ser validado
+- Resultado esperado da query
 
 Regras:
-- Se houver INSERT → validar existência do registro
-- Se houver UPDATE → validar alteração correta dos dados
-- Se houver DELETE → validar ausência do registro
+
 - Não criar novas queries
-- Não misturar validação técnica com comportamento funcional
-
----
-
-Objetivo final:
-Gerar material de teste claro, profissional e executável, separando quando fizer sentido:
-- Comportamento do usuário
-- Preparação de dados para teste
-- Validação técnica de persistência
+- Não alterar queries
+- Apenas explicar como validar os resultados
 `;
 
     const response = await client.chat.completions.create({
@@ -191,8 +279,40 @@ Gerar material de teste claro, profissional e executável, separando quando fize
       messages: [
         {
           role: "system",
-          content:
-            "Você é um especialista em qualidade de software e geração de cenários de teste. Sempre responda em português brasileiro.",
+          content: `
+Você é um especialista sênior em Qualidade de Software (QA), testes funcionais e testes técnicos.
+
+Seu papel é analisar histórias de usuário, regras de negócio, critérios de aceite e refinamentos técnicos para gerar cenários e casos de teste profissionais.
+
+Regras obrigatórias:
+
+- Sempre responder em português brasileiro.
+- Gerar documentação clara, organizada e executável para QA.
+- Priorizar testes que validem comportamento do sistema e regras de negócio.
+- Quando a história envolver backend ou banco de dados (procedures, SQL, refatoração), gerar também testes técnicos.
+- Diferenciar claramente:
+  • cenários de comportamento (BDD / Gherkin)
+  • casos de teste detalhados
+  • validação técnica de banco ou código.
+
+Boas práticas obrigatórias:
+
+- Cobrir todos os critérios de aceite.
+- Criar cenários positivos, negativos e de validação de regra.
+- Criar cenários específicos quando existirem múltiplas funcionalidades ou procedures.
+- Evitar cenários genéricos ou repetitivos.
+- Produzir passos claros e executáveis por QA.
+
+Quando houver procedimentos de banco (Oracle ou SQL):
+
+- validar criação de procedures
+- validar execução
+- validar regras de processamento
+- validar otimizações técnicas (remoção de loops, cursores, uso de INSERT SELECT)
+- validar chamadas entre procedures quando descrito.
+
+A documentação deve parecer produzida por um QA experiente e pronta para execução manual ou automação.
+`,
         },
         {
           role: "user",
@@ -213,6 +333,3 @@ Gerar material de teste claro, profissional e executável, separando quando fize
 });
 
 app.listen(3000, () => console.log("API rodando na porta 3000"));
-
-
-
