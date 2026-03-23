@@ -23,9 +23,9 @@ const client = new OpenAI({
 
 app.post("/processar-requisitos", async (req, res) => {
   try {
-    const { narrativa = '', premissas = '', regras = '', criteriosAceite = '', refinamentoTecnico = '' } = req.body || {};
+    const { narrativa = '', regras = '', criteriosAceite = '', refinamentoTecnico = '' } = req.body || {};
 
-    if (!narrativa && !premissas && !regras && !criteriosAceite && !refinamentoTecnico) {
+    if (!narrativa && !regras && !criteriosAceite && !refinamentoTecnico) {
       return res.status(400).json({ error: 'Nenhum campo foi preenchido' });
     }
 
@@ -33,9 +33,9 @@ app.post("/processar-requisitos", async (req, res) => {
 IMPORTANTE:
 - Responda SEMPRE em português brasileiro.
 - Utilize TODAS as informações fornecidas.
-- Caso existam queries SQL no Refinamento Técnico, elas DEVEM ser utilizadas para validação nos casos de teste.
-- Não seja excessivamente técnico. Priorize clareza, organização e objetividade.
-- Não inventar queries SQL se não existirem no refinamento técnico.
+- Ultilize o refinamento técnico para compreenssão do que foi desenvolvido.
+- Gere uma documentação clara, suscinta e específica do que foi desenvolvido e precisa ser testado.
+- Os casos de testes devem conter os passos para a execução dos mesmos.
 
 Com base nas informações abaixo, gere uma documentação completa e estruturada.
 
@@ -43,9 +43,6 @@ Com base nas informações abaixo, gere uma documentação completa e estruturad
 
 ### 📌 Narrativa
 ${narrativa || 'Não informado'}
-
-### 📌 Premissas
-${premissas || 'Não informado'}
 
 ### 📌 Regras de Negócio
 ${regras || 'Não informado'}
@@ -65,18 +62,6 @@ Retorne obrigatoriamente na seguinte estrutura:
 - Objetivo da funcionalidade
 - Impacto esperado no sistema
 
-# 2. REGRAS DE NEGÓCIO REFINADAS
-- Lista organizada
-- Escritas de forma clara e objetiva
-
-# 3. REQUISITOS
-
-## 3.1 Requisitos Funcionais
-- Lista numerada
-
-## 3.2 Requisitos Não Funcionais
-- Lista numerada
-
 # 4. CENÁRIOS DE TESTE (PADRÃO GHERKIN)
 
 Funcionalidade: [Nome da funcionalidade]
@@ -94,7 +79,6 @@ Então ...
 
 Para cada cenário Gherkin, criar:
 
-- ID do Caso de Teste
 - Nome do Caso
 - Objetivo
 - Pré-condições
@@ -102,20 +86,6 @@ Para cada cenário Gherkin, criar:
 - Passos detalhados numerados
 - Resultado esperado
 - Evidência esperada
-
-Quando houver persistência de dados:
-- Incluir seção "Validação no Banco de Dados"
-- Informar a query SQL a ser executada
-- Informar o que deve ser validado no retorno da query
-- Se houver INSERT, validar com SELECT
-- Se houver UPDATE, validar alteração de dados
-- Se houver DELETE, validar ausência do registro
-
-# 6. ESTRATÉGIA DE AUTOMAÇÃO
-
-- Indicar quais cenários são candidatos à automação
-- Indicar se a automação deve ser via UI, API ou Banco
-- Informar pontos críticos para validação automatizada
 `;
 
     const response = await client.chat.completions.create({
@@ -123,7 +93,7 @@ Quando houver persistência de dados:
       messages: [
         {
           role: "system",
-          content: "Você é um especialista em qualidade de software e geração de cenários de teste. Sempre responda em português brasileiro."
+          content: "Você é um analista de qualidade de software (QA). Sempre responda em português brasileiro."
         },
         {
           role: "user",
